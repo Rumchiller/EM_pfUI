@@ -1,4 +1,40 @@
 pfUI:RegisterModule("minimap", 20400, function ()
+
+	local update_lasttime = GetTime();
+
+	local function minimap_update()
+		if (not WorldMapFrame:IsShown()) then
+			SetMapToCurrentZone()
+		end
+		if C.appearance.minimap.coordsloc ~= "off" then
+		  local posX, posY = GetPlayerMapPosition("player")
+		  if posX ~= 0 and posY ~= 0 then
+			pfUI.minimapCoordinates.text:SetText(string.format("%.1f", round(posX * 100, 1)) .. ", " .. string.format("%.1f", round(posY * 100, 1)))
+		  else
+			pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
+		  end
+		  pfUI.minimapCoordinates:Show()
+		end
+
+		if C.appearance.minimap.zonetext == "1" then
+		  local pvp, _, arena = GetZonePVPInfo()
+		  if arena then
+			pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
+		  elseif pvp == "friendly" then
+			pfUI.minimapZone.text:SetTextColor(0.1, 1.0, 0.1)
+		  elseif pvp == "hostile" then
+			pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
+		  elseif pvp == "contested" then
+			pfUI.minimapZone.text:SetTextColor(1.0, 0.7, 0)
+		  else
+			pfUI.minimapZone.text:SetTextColor(1, 1, 1, 1)
+		  end
+
+		  pfUI.minimapZone.text:SetText(GetMinimapZoneText())
+		  pfUI.minimapZone:Show()
+		end	
+	end
+
   local border = tonumber(pfUI_config.appearance.border.default)
   MinimapToggleButton:Hide()
   MinimapBorderTop:Hide()
@@ -19,6 +55,16 @@ pfUI:RegisterModule("minimap", 20400, function ()
   pfUI.minimap:SetScript("OnShow", function()
     QueueFunction(ShowUIPanel, Minimap)
   end)
+
+	if (C.appearance.minimap.onlyonmouseover == "0") then
+		pfUI.minimap:SetScript("OnUpdate", function()
+			local update_timed_out = (GetTime() - update_lasttime) > 0.25;
+			if (update_timed_out and not IsInInstance()) then
+				minimap_update();
+				update_lasttime = GetTime();
+			end
+		end)
+	end
 
   Minimap:SetParent(pfUI.minimap)
   Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
@@ -131,7 +177,11 @@ pfUI:RegisterModule("minimap", 20400, function ()
     pfUI.minimapCoordinates.text:SetJustifyH("LEFT")
   end
 
-  pfUI.minimapCoordinates:Hide()
+	if (C.appearance.minimap.onlyonmouseover == "1") then
+		pfUI.minimapCoordinates:Hide();
+	else
+		pfUI.minimapCoordinates:Show();
+	end
 
   -- Create zone text frame in top center of minimap
   pfUI.minimapZone = CreateFrame("Frame", "pfMinimapZone", pfUI.minimap)
@@ -143,43 +193,23 @@ pfUI:RegisterModule("minimap", 20400, function ()
   pfUI.minimapZone.text:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
   pfUI.minimapZone.text:SetAllPoints(pfUI.minimapZone)
   pfUI.minimapZone.text:SetJustifyH("CENTER")
-  pfUI.minimapZone:Hide()
+
+	if (C.appearance.minimap.onlyonmouseover == "1") then
+		pfUI.minimapZone:Hide();
+	else
+		pfUI.minimapZone:Show();
+	end
 
   -- Minimap hover event
   -- Update and toggle showing of coordinates and zone text on mouse enter/leave
   Minimap:SetScript("OnEnter", function()
-    SetMapToCurrentZone()
-    if C.appearance.minimap.coordsloc ~= "off" then
-      local posX, posY = GetPlayerMapPosition("player")
-      if posX ~= 0 and posY ~= 0 then
-        pfUI.minimapCoordinates.text:SetText(round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
-      else
-        pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
-      end
-      pfUI.minimapCoordinates:Show()
-    end
-
-    if C.appearance.minimap.mouseoverzone == "1" then
-      local pvp, _, arena = GetZonePVPInfo()
-      if arena then
-        pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
-      elseif pvp == "friendly" then
-        pfUI.minimapZone.text:SetTextColor(0.1, 1.0, 0.1)
-      elseif pvp == "hostile" then
-        pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
-      elseif pvp == "contested" then
-        pfUI.minimapZone.text:SetTextColor(1.0, 0.7, 0)
-      else
-        pfUI.minimapZone.text:SetTextColor(1, 1, 1, 1)
-      end
-
-      pfUI.minimapZone.text:SetText(GetMinimapZoneText())
-      pfUI.minimapZone:Show()
-    end
+		minimap_update(true, true);
   end)
   Minimap:SetScript("OnLeave", function()
-    pfUI.minimapCoordinates:Hide()
-    pfUI.minimapZone:Hide()
+	if (C.appearance.minimap.onlyonmouseover == "1") then
+		pfUI.minimapCoordinates:Hide();
+		pfUI.minimapZone:Hide();
+	end
   end)
 
   pfUI.minimap.pvpicon = CreateFrame("Frame", nil, pfUI.minimap)

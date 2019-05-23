@@ -1,3 +1,19 @@
+# Special features by EM-Addons
+
+#### v0.1:
+* Updated /modules/tooltip.lua: This feature will try to show the real healthpoint values in the pfUI-tooltips of mobs, when MobInfo2 is present.
+
+#### v0.2:
+* Updated /api/unitframes.lua: Now a message will be displayed when the pet's happiness is not fully happy (125%).
+
+#### v0.3:
+* Updated /api/config.lua, /modules/gui.lua, /modules/thirdparty.lua: Added thirdparty skin for Postal.
+
+#### v0.4:
+* Updated /modules/hoverbind.lua: Added mousebutton with modifier keys support for Hoverbind.
+
+
+
 # pfUI
 
 An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims to be a full replacement for the original interface. The design is inspired by several screenshots I've seen from TukUI, ElvUI and others. This addon delivers modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.

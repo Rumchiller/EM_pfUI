@@ -974,4 +974,105 @@ pfUI:RegisterModule("thirdparty", function ()
 
 
   end)
+
+	HookAddonOrVariable("Postal", function()
+
+		if C.thirdparty.postal.enable == "0" then
+			return;
+		end
+
+		local border	= tonumber(pfUI_config.appearance.border.default);
+		local bpad		= (border > 1 and border - 1) or 1;
+
+
+
+		-- Inbox -->>>
+		InboxFrame:SetScript("OnShow", function ()
+
+			local i;
+
+			local postalItemCheckbox	= getglobal("PostalBoxItem1CB");
+			local mailExpireTimeItem	= getglobal("MailItem1ExpireTime");
+
+			-- buttons
+			SkinButton(PostalInboxOpenSelected);
+			SkinButton(PostalInboxOpenAllButton);
+
+			-- checkboxes
+			i = 1;
+			while (postalItemCheckbox) do
+				StripTextures(postalItemCheckbox, nil, "BACKGROUND");
+				SkinCheckbox(postalItemCheckbox);
+
+				i = i + 1;
+				postalItemCheckbox = getglobal("PostalBoxItem" .. i .. "CB");
+			end
+
+			-- expire time
+			i = 1;
+			while (mailExpireTimeItem) do
+				point, relativeTo, relativePoint, xOfs, yOfs = mailExpireTimeItem:GetPoint();
+				mailExpireTimeItem:SetPoint(point, relativeTo, relativePoint, xOfs - 100, yOfs);
+
+				i = i + 1;
+				mailExpireTimeItem = getglobal("MailItem" .. i .. "ExpireTime");
+			end
+
+		end);
+
+
+
+		-- Outbox -->>>
+		SendMailFrame:SetScript("OnShow", function ()
+
+			local i;
+
+			local postalAttachmentFrame	= getglobal("PostalAttachment1");
+
+			-- subject
+			StripTextures(PostalSubjectEditBox, nil, "BACKGROUND");
+			CreateBackdrop(PostalSubjectEditBox);
+			PostalSubjectEditBox:SetTextInsets(-2,5,5,5);
+
+			point, relativeTo, relativePoint, xOfs, yOfs = PostalSubjectEditBox:GetPoint();
+			tmp0, tmp1, tmp2, xOfsName, yOfsName = SendMailNameEditBox:GetPoint();
+
+			PostalSubjectEditBox:ClearAllPoints();
+			PostalSubjectEditBox:SetPoint(point, relativeTo, relativePoint, xOfsName - 103, yOfs);
+			PostalSubjectEditBox:SetWidth(SendMailNameEditBox:GetWidth() * 2 - 13);
+
+			-- mail body
+			StripTextures(SendMailScrollFrame);
+			CreateBackdrop(SendMailScrollFrame, nil, true);
+			SendMailBodyEditBox:SetTextColor(1, 1, 1, 1);
+
+			-- attachments
+			i = 1;
+			while (postalAttachmentFrame) do
+				StripTextures(postalAttachmentFrame, nil, "BACKGROUND");
+				SkinButton(postalAttachmentFrame);
+
+				i = i + 1;
+				postalAttachmentFrame = getglobal("PostalAttachment".. i);
+			end
+
+			-- send button
+			SkinButton(PostalMailButton);
+			PostalMailButton:ClearAllPoints();
+			PostalMailButton:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -2 * bpad, 0);
+
+			-- postal waste
+			PostalHorizontalBarLeft:Hide();
+			PostalHorizontalBarLeft:SetParent(nil);
+			PostalHorizontalBarRight:Hide();
+			PostalHorizontalBarRight:SetParent(nil);
+			StationeryBackgroundLeft:Hide();
+			StationeryBackgroundLeft:SetParent(nil);
+			StationeryBackgroundRight:Hide();
+			StationeryBackgroundRight:SetParent(nil);
+			StripTextures(SendMailPackageButton);
+
+		end);
+
+	end)
 end)
