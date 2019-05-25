@@ -4,8 +4,6 @@ pfUI.uf.frames = {}
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
-local pet_happiness_last_time = GetTime();
-
 local pfValidUnits = {}
 pfValidUnits["player"] = true
 pfValidUnits["target"] = true
@@ -699,24 +697,6 @@ function pfUI.uf.OnUpdate()
       pfUI.uf:RefreshUnit(this, "all")
     end
   end
-  
-  	local tmp, isHunterPet = HasPetUI(); -- isHunterPet can only be true when pet active (called)
-
-	if (isHunterPet) then
-
-		local pet_is_alive		= not UnitIsDead("pet");
-		local pet_is_hungry		= GetPetHappiness() ~= 3;
-		local pet_msg_timed_out	= (GetTime() - pet_happiness_last_time) > 5;
-
-		if (pet_is_alive and pet_is_hungry and pet_msg_timed_out) then
-
-			UIErrorsFrame:AddMessage("Feed your pet!", 1.0, 0.5, 0.0, 1.0, 1.0);
-			pet_happiness_last_time = GetTime();
-
-		end
-
-	end
-	
 end
 
 function pfUI.uf.OnEnter()
