@@ -1069,6 +1069,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "druidmana",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "noteit",      "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "postal",      "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "pfquest",     "enable",           "1")
 
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)

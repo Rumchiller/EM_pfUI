@@ -1970,6 +1970,7 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, "DruidManaBar", C.thirdparty.druidmana, "enable", "checkbox")
       CreateConfig(nil, "NoteIt", C.thirdparty.noteit, "enable", "checkbox")
 	  CreateConfig(nil, "Postal", C.thirdparty.postal, "enable", "checkbox")
+	  CreateConfig(nil, "pfQuest", C.thirdparty.pfquest, "enable", "checkbox")
     end)
 
     CreateGUIEntry(T["Components"], T["Modules"], function()

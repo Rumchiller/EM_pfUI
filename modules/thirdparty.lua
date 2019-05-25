@@ -1075,4 +1075,18 @@ pfUI:RegisterModule("thirdparty", function ()
 		end);
 
 	end)
+
+	HookAddonOrVariable("pfQuest", function()
+
+		if C.thirdparty.pfquest.enable == "0" then
+			return;
+		end
+
+		SkinButton(pfQuestShow);
+		SkinButton(pfQuestHide);
+		SkinButton(pfQuestClean);
+		SkinButton(pfQuestReset);
+
+	end)
+
 end)
