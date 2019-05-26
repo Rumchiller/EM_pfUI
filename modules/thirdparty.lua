@@ -1012,7 +1012,8 @@ pfUI:RegisterModule("thirdparty", function ()
 			i = 1;
 			while (mailExpireTimeItem) do
 				point, relativeTo, relativePoint, xOfs, yOfs = mailExpireTimeItem:GetPoint();
-				mailExpireTimeItem:SetPoint(point, relativeTo, relativePoint, xOfs - 100, yOfs);
+				mailExpireTimeItem:ClearAllPoints();
+				mailExpireTimeItem:SetPoint(point, relativeTo, relativePoint, -4, -4);
 
 				i = i + 1;
 				mailExpireTimeItem = getglobal("MailItem" .. i .. "ExpireTime");
